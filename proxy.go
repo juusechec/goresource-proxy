@@ -1,12 +1,15 @@
 package main
 
 import (
+	"bufio"
 	"fmt"
 	"io"
 	"io/ioutil"
 	"log"
 	"net/http"
 	"net/url"
+	"os"
+	"strings"
 )
 
 // ProxyServer the web server
@@ -26,7 +29,7 @@ func ProxyServer(w http.ResponseWriter, req *http.Request) {
 		io.WriteString(w, `
       <form action="/" method="get">
           URL: <input type="text" name="url">
-          <input type="submit" value="Login">
+          <input type="submit" value="Send">
       </form>
     `)
 		return
@@ -43,6 +46,14 @@ func ProxyServer(w http.ResponseWriter, req *http.Request) {
 	url := q["url"][0] // file url for proxy
 	//fmt.Fprintf(w, "Hello, %q", html.EscapeString(req.URL.Path))
 	//serverValue := req.Header().Get("Server")
+
+	// Search it is in whitelist (YOU CAN REMOVE)
+	isInWhitelist := isInList(url)
+	if isInWhitelist == false {
+		log.Println("Error isNotInWhitelist:")
+		io.WriteString(w, "The URL is not in whitelist.lst.\n")
+		return
+	}
 
 	// assembly request of URL
 	client := http.Client{} // request client
@@ -81,4 +92,30 @@ func main() {
 	http.HandleFunc("/", ProxyServer)
 	fmt.Println("Listening on http://localhost:12345")
 	log.Fatal(http.ListenAndServe(":12345", nil))
+}
+
+func isInList(url string) bool {
+	isIn := false
+	file, err := os.Open("whitelist.lst")
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer file.Close()
+
+	scanner := bufio.NewScanner(file)
+	for scanner.Scan() {
+		line := scanner.Text()
+		fmt.Println(line, url)
+		i := strings.Index(url, line)
+		if i == 0 { // Is in first position/index
+			isIn = true
+			break
+		}
+	}
+
+	if err := scanner.Err(); err != nil {
+		log.Fatal(err)
+	}
+
+	return isIn
 }
