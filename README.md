@@ -61,6 +61,7 @@ $.ajax({
     console.log('success');
     // Read Header of Response
     console.log('My desired header: ', xhr.getResponseHeader('_Set-Cookie'));
+    console.log('Get All response headers', xhr.getAllResponseHeaders());
   },
   error: function(err) { // Error callbak
     console.log('error', err);
