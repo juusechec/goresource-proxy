@@ -108,12 +108,20 @@ func ProxyServer(w http.ResponseWriter, req *http.Request) {
 		log.Println("Error responseData: ", err)
 	}
 
+	renameheaders := false
+	if len(q["renameheaders"]) > 0 { // si viene el parametro con cualquier valor
+		renameheaders = true
+	}
+
 	// pass headers from request to response
 	headerList := ""
 	for k, v := range response.Header {
 		w.Header().Set(k, v[0])
-		w.Header().Set("_"+k, v[0])
-		headerList += k + "," + "_" + k + ","
+		if renameheaders {
+			w.Header().Set("_"+k, v[0])
+			headerList += "_" + k + ","
+		}
+		headerList += k + ","
 	}
 	headerList = headerList[0 : len(headerList)-1]
 
