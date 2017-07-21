@@ -15,6 +15,7 @@ import (
 )
 
 var (
+	// Address is a complete service URL http://hostname:port/context
 	Address string
 )
 
@@ -28,6 +29,7 @@ func main() {
 
 // ProxyServer the web server
 func ProxyServer(w http.ResponseWriter, req *http.Request) {
+	origin := req.Header.Get("Origin")
 	//io.WriteString(w, "Mensaje") // to write message to client
 	//fmt.Println(req.RequestURI) // to print request URI
 	u, err := url.Parse(req.RequestURI) // parse to URL object form URI
@@ -90,13 +92,29 @@ func ProxyServer(w http.ResponseWriter, req *http.Request) {
 	}
 
 	// pass headers from request to response
+	headerList := ""
 	for k, v := range response.Header {
 		w.Header().Set(k, v[0])
+		w.Header().Set("_"+k, v[0])
+		headerList += k + "," + "_" + k + ","
 	}
+	headerList = headerList[0 : len(headerList)-1]
 
 	// w.Header().Set("AtEnd1", "value 1")
 	// w.Header().Add("AtEnd1", "AtEnd3") // Not rewrite header
 	// w.Header().Set("Saludo", "Hola Andres")
+
+	// add CORS headers
+	// https://developer.mozilla.org/en-US/docs/Web/HTTP/Access_control_CORS#Access-Control-Expose-Headers
+	w.Header().Set("Access-Control-Allow-Origin", origin)
+	//w.Header().Set("Access-Control-Allow-Origin", "*")
+	w.Header().Set("Access-Control-Allow-Credentials", "true")
+	w.Header().Set("Access-Control-Allow-Headers", headerList)
+	w.Header().Set("Access-Control-Expose-Headers", headerList)
+	// w.Header().Set("Access-Control-Allow-Headers", "Set-Cookie")
+	// w.Header().Set("Access-Control-Expose-Headers", "Set-Cookie")
+	// w.Header().Set("Access-Control-Allow-Methods", "GET")
+	//w.Header().Set("Access-Control-Expose-Headers", "ETag")
 
 	// write data and exit
 	w.Write(responseData)
