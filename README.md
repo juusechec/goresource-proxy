@@ -20,3 +20,15 @@ la cuál es rechazada debido a que no está en el archivo [whitelist.srt](./whit
 
 ![screenshot](./images/Screenshot_from_2017-07-20_18-48-54.png)
 ![screenshot](./images/Screenshot_from_2017-07-20_18-49-07.png)
+
+Puede cambiar los HEADERS de la petición con el parámetro ***headers*** de la
+petición GET, separando cada cabecera con el string "\r\n" (sin comillas) y
+separando clave y valor con ":" (dos puntos). Un ejemplo de construcción de la
+URL sería.
+```js
+var headers = 'Cookie:newcookie\\r\\nGoogle:GENIO';
+var url = 'https://www.google.com.co';
+console.log(headers, url);
+var completeURL = 'http://localhost:12345/proxy?headers=' + escape(headers) + '&url=' + escape(url);
+console.log(completeURL);
+```

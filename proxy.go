@@ -78,6 +78,23 @@ func ProxyServer(w http.ResponseWriter, req *http.Request) {
 		log.Println("Error GET: ", err)
 	}
 
+	if len(q["headers"]) > 0 {
+		headers := q["headers"][0]
+		// would be oriented to headers separed by \r\n literally strings for LF CR
+		// example headers=Cookie:####\r\nOrigin:OtherOriginValue
+		// im spect this is sufficient
+		headersList := strings.Split(headers, "\\r\\n")
+		for index := 0; index < len(headersList); index++ {
+			header := strings.Split(headersList[index], ":")
+			if len(header) < 2 {
+				log.Println("Error HEADER: ", header)
+			} else {
+				request.Header.Set(header[0], header[1])
+			}
+		}
+
+	}
+
 	// execute petition
 	response, err := client.Do(request)
 	if err != nil {
