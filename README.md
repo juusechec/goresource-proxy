@@ -23,7 +23,8 @@ la cuál es rechazada debido a que no está en el archivo [whitelist.srt](./whit
 
 Puede cambiar los HEADERS de la petición con el parámetro ***headers*** de la
 petición GET, separando cada cabecera con el string "\r\n" (sin comillas) y
-separando clave y valor con ":" (dos puntos). Un ejemplo de construcción de la
+separando clave y valor con ":" (dos puntos), un ejemplo puede ser
+"Cookie:newcookie\r\nGoogle:GENIO". La construcción en lenguaje Javascript sería.
 URL sería.
 ```js
 var headers = 'Cookie:newcookie\\r\\nGoogle:GENIO';
