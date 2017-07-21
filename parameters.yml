@@ -1,0 +1,7 @@
+# This file is based in parameters.yml symfony
+hostname: localhost
+# hostname empty for all hostnames
+#hostname:
+#context: /proxy
+context: /
+port: 12345
