@@ -50,7 +50,7 @@ func ProxyServer(w http.ResponseWriter, req *http.Request) {
 	// Search it is in whitelist (YOU CAN REMOVE)
 	isInWhitelist := isInList(url)
 	if isInWhitelist == false {
-		log.Println("Error isNotInWhitelist:")
+		log.Println("Error isNotInWhitelist:" + url)
 		io.WriteString(w, "The URL is not in whitelist.lst.\n")
 		return
 	}
@@ -105,7 +105,6 @@ func isInList(url string) bool {
 	scanner := bufio.NewScanner(file)
 	for scanner.Scan() {
 		line := scanner.Text()
-		fmt.Println(line, url)
 		i := strings.Index(url, line)
 		if i == 0 { // Is in first position/index
 			isIn = true
@@ -114,7 +113,7 @@ func isInList(url string) bool {
 	}
 
 	if err := scanner.Err(); err != nil {
-		log.Fatal(err)
+		log.Println(err)
 	}
 
 	return isIn
