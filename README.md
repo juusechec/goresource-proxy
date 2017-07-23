@@ -1,3 +1,4 @@
+[![Build Status](https://travis-ci.org/juusechec/goresource-proxy.svg?branch=master)](https://travis-ci.org/juusechec/goresource-proxy)
 [![Go Report Card](https://goreportcard.com/badge/github.com/juusechec/goresource-proxy)](https://goreportcard.com/report/github.com/juusechec/goresource-proxy)
 
 # goresource-proxy
