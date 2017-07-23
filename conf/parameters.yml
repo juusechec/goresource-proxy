@@ -1,0 +1,4 @@
+# This file is only for test purposes
+hostname: localhost
+context: /proxy
+port: 12345
