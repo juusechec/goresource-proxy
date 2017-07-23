@@ -11,7 +11,7 @@ import (
 	"os"
 	"strings"
 
-	conf "./conf"
+	"github.com/juusechec/goresource-proxy/conf"
 )
 
 var (
