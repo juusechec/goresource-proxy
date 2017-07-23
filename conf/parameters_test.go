@@ -3,7 +3,7 @@ package conf_test
 import (
 	"testing"
 
-	conf "../conf"
+	"github.com/juusechec/goresource-proxy/conf"
 )
 
 func TestConf(t *testing.T) {
