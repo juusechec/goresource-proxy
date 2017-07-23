@@ -4,11 +4,11 @@
 # goresource-proxy
 A file proxy like https://github.com/Esri/resource-proxy Go Proxy Files
 
-## parametros aceptados
-- *url*: va la URL del recurso que se quiere obtener por el proxy
-- *headers*: si se quiere escribir cabeceras sobre el proxy desde el backend,
+## Parámetros aceptados
+- **url**: va la URL del recurso que se quiere obtener por el proxy
+- **headers**: si se quiere escribir cabeceras sobre el proxy desde el backend,
 estas van separadas por "\r\n" y el par clave valor con ":". Ver ejemplos.
-- *renameheaders*: este puede tener cualquier valor (recomendado "true"),
+- **renameheaders**: este puede tener cualquier valor (recomendado "true"),
 al tener este parametro, renombra las cabeceras anteponiendo un *_* para que
 puedan ser accedidas sin problemas desde un navegador.
 
