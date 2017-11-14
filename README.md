@@ -72,3 +72,31 @@ $.ajax({
   console.log('complete');
 });
 ```
+# Poner como servicio systemd
+
+```bash
+sudo tee /usr/lib/systemd/system/goresource-proxy.service << 'EOF'
+[Unit]
+Description=goresource-proxy
+After=network.target
+#After=network.target remote-fs.target nss-lookup.target
+[Service]
+#Environment=GOPATH=/home/<user>
+ExecStart=/home/<user>/goresource-proxy/start.sh
+Type=simple
+#ExecStop=/usr/lib/systemd/scripts/apachectl stop
+#RemainAfterExit=yes
+[Install]
+WantedBy=default.target
+EOF
+
+sudo tee /home/<user>/goresource-proxy/start.sh << 'EOF'
+#!/bin/bash -u
+cd /home/<user>/goresource-proxy
+./goresource-proxy
+EOF
+
+sudo chmod +x /home/<user>/goresource-proxy/start.sh
+sudo systemctl start goresource-proxy
+sudo systemctl enable goresource-proxy
+```
