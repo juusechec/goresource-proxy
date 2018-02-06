@@ -76,6 +76,7 @@ func ProxyServer(w http.ResponseWriter, req *http.Request) {
 	request, err := http.NewRequest("GET", url, nil)
 	if err != nil {
 		log.Println("Error GET: ", err)
+		return
 	}
 
 	if len(q["headers"]) > 0 {
@@ -92,13 +93,13 @@ func ProxyServer(w http.ResponseWriter, req *http.Request) {
 				request.Header.Set(header[0], header[1])
 			}
 		}
-
 	}
 
 	// execute petition
 	response, err := client.Do(request)
 	if err != nil {
 		log.Println("Error Client DO: ", err)
+		return
 	}
 	defer response.Body.Close()
 
@@ -106,6 +107,7 @@ func ProxyServer(w http.ResponseWriter, req *http.Request) {
 	responseData, err := ioutil.ReadAll(response.Body)
 	if err != nil {
 		log.Println("Error responseData: ", err)
+		return
 	}
 
 	renameheaders := false

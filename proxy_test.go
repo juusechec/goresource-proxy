@@ -52,19 +52,22 @@ func getRequest(url string) string {
 	request, err := http.NewRequest("GET", url, nil)
 	if err != nil {
 		log.Println("Error GET: ", err)
+		return
 	}
 
 	// execute petition
 	response, err := client.Do(request)
 	if err != nil {
 		log.Println("Error Client DO: ", err)
+		return
 	}
-	defer response.Body.Close()
+	defer response.Body.Close() // response can be nil
 
 	// get response data
 	responseData, err := ioutil.ReadAll(response.Body)
 	if err != nil {
 		log.Println("Error responseData: ", err)
+		return
 	}
 
 	return string(responseData)
