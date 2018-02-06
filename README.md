@@ -4,6 +4,19 @@
 # goresource-proxy
 A file proxy like https://github.com/Esri/resource-proxy Go Proxy Files
 
+## Ejecutar
+```sh
+go build -o goresource-proxy proxy.go
+./goresource-proxy
+```
+
+## Usar con curl
+O escribe http://localhost:12345/ en tu navegador web
+```sh
+curl http://localhost:12345/?url=https%3A%2F%2Fwww.google.com%2F
+curl http://localhost:12345/?url=https%3A%2F%2Fwww.gmail.com%2F
+```
+
 ## Parámetros aceptados
 - **url**: va la URL del recurso que se quiere obtener por el proxy
 - **headers**: si se quiere escribir cabeceras sobre el proxy desde el backend,

@@ -16,16 +16,29 @@ var end = make(chan bool)
 func TestProxy(t *testing.T) {
 	go runServer()
 	time.Sleep(3 * time.Second) // Wait for server start
-	msg := getRequest("http://localhost:12345/?url=https%3A%2F%2Fwww.google.com%2F")
-	//fmt.Println(msg)
+
+	msg, cod, err := getRequest("http://localhost:12345/?url=https%3A%2F%2Fwww.google.com%2F")
+	if err != nil {
+		t.Error("Service is not started? cannot getRequest", err)
+	}
+	if cod != 200 {
+		t.Error("Query service isn't posible, HTTP error code: ", cod, msg)
+	}
 	if msg == "The URL is not in whitelist.lst.\n" {
 		t.Error("Is not query www.google.com")
 	}
-	msg = getRequest("http://localhost:12345/?url=https%3A%2F%2Fwww.gmail.com%2F")
-	//fmt.Println(msg)
+
+	msg, cod, err = getRequest("http://localhost:12345/?url=https%3A%2F%2Fwww.gmail.com%2F")
+	if err != nil {
+		t.Error("Service is not started? cannot getRequest", err)
+	}
+	if cod != 200 {
+		t.Error("Query service isn't posible, HTTP error code: ", cod, msg)
+	}
 	if msg != "The URL is not in whitelist.lst.\n" {
 		t.Error("Is query www.gmail.com")
 	}
+
 	end <- true
 	time.Sleep(1 * time.Second) // Wait for server end
 }
@@ -43,23 +56,23 @@ func runServer() {
 	}
 
 	msg := <-end // wait for message
-	fmt.Println("Exit go run proxy.go:", msg)
+	fmt.Println("Exit go run proxy.go: ", msg)
 	cmd.Wait() // Exit?
 }
 
-func getRequest(url string) string {
+func getRequest(url string) (string, int, error) {
 	client := http.Client{} // request client
 	request, err := http.NewRequest("GET", url, nil)
 	if err != nil {
 		log.Println("Error GET: ", err)
-		return
+		return "", -1, err
 	}
 
 	// execute petition
 	response, err := client.Do(request)
 	if err != nil {
 		log.Println("Error Client DO: ", err)
-		return
+		return "", -1, err
 	}
 	defer response.Body.Close() // response can be nil
 
@@ -67,8 +80,8 @@ func getRequest(url string) string {
 	responseData, err := ioutil.ReadAll(response.Body)
 	if err != nil {
 		log.Println("Error responseData: ", err)
-		return
+		return "", response.StatusCode, err
 	}
 
-	return string(responseData)
+	return string(responseData), response.StatusCode, nil
 }

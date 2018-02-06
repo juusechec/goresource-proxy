@@ -35,6 +35,8 @@ func ProxyServer(w http.ResponseWriter, req *http.Request) {
 	u, err := url.Parse(req.RequestURI) // parse to URL object form URI
 	if err != nil {
 		log.Println("Error Parse: ", err)
+		http.Error(w, "Error parsing URL", 400)
+		return
 	}
 
 	q := u.Query() // query params of URL
@@ -76,6 +78,7 @@ func ProxyServer(w http.ResponseWriter, req *http.Request) {
 	request, err := http.NewRequest("GET", url, nil)
 	if err != nil {
 		log.Println("Error GET: ", err)
+		http.Error(w, "Error making new request", 500)
 		return
 	}
 
@@ -89,6 +92,8 @@ func ProxyServer(w http.ResponseWriter, req *http.Request) {
 			header := strings.Split(headersList[index], ":")
 			if len(header) < 2 {
 				log.Println("Error HEADER: ", header)
+				http.Error(w, "Error reading HEADER", 400)
+				return
 			} else {
 				request.Header.Set(header[0], header[1])
 			}
@@ -99,6 +104,7 @@ func ProxyServer(w http.ResponseWriter, req *http.Request) {
 	response, err := client.Do(request)
 	if err != nil {
 		log.Println("Error Client DO: ", err)
+		http.Error(w, "Error getting resource in URL", 502)
 		return
 	}
 	defer response.Body.Close()
@@ -107,6 +113,7 @@ func ProxyServer(w http.ResponseWriter, req *http.Request) {
 	responseData, err := ioutil.ReadAll(response.Body)
 	if err != nil {
 		log.Println("Error responseData: ", err)
+		http.Error(w, "Error getting response in URL", 502)
 		return
 	}
 
