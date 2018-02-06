@@ -65,7 +65,7 @@ func ProxyServer(w http.ResponseWriter, req *http.Request) {
 
 	// Search it is in whitelist (YOU CAN REMOVE)
 	isInWhitelist := isInList(url)
-	if isInWhitelist == false {
+	if !isInWhitelist {
 		log.Println("Error isNotInWhitelist: " + url)
 		io.WriteString(w, "The URL is not in whitelist.lst.\n")
 		return
